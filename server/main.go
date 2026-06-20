@@ -57,6 +57,9 @@ func main() {
 	// 	fmt.Println(err.Error())
 	// }
 
+	// init validation driver
+	validatorInit(&configurations)
+
 	appVer := configurations.EnvConfig["APP_VERSION"]
 	fmt.Println("versinya ", appVer)
 	app := fiber.New(fiber.Config{
@@ -71,6 +74,7 @@ func main() {
 		ReqID:     xid.New().String(),
 		EnvConfig: configurations.EnvConfig,
 		DB:        configurations.DB,
+		Validate:  validatorDriver,
 	}
 
 	appBoot := bootsrap.AppBoot{

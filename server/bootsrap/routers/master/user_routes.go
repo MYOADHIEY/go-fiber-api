@@ -24,4 +24,6 @@ func (route UserRoute) RegisterRouters() {
 	r.Use(middlewares.SavingContextValue(time.Duration(str.StringToInt(route.Handler.BaseUC.EnvConfig["APP_TIMEOUT"])) * time.Second))
 	r.Use(jwtMiddleware.VerifyBasic)
 	r.Get("/", handler.Find)
+	r.Get("/:id", handler.FindByID)
+	r.Post("/", handler.Add)
 }

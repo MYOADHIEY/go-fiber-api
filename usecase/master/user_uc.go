@@ -6,6 +6,7 @@ import (
 	"kbaa-fiber-api/pkg/logruslogger"
 	irepository "kbaa-fiber-api/repositories/masters"
 	imodles "kbaa-fiber-api/repositories/masters/models"
+	irequests "kbaa-fiber-api/server/requests/master"
 	baseUC "kbaa-fiber-api/usecase/base"
 	baseviewmodels "kbaa-fiber-api/usecase/base/viewmodels"
 	iviewmodels "kbaa-fiber-api/usecase/master/viewmodels"
@@ -38,5 +39,33 @@ func (uc UserUC) FindAll(c context.Context, parameter imodles.UserParameters) (r
 		uc.BuildBody(&res[i])
 	}
 
+	return
+}
+
+func (uc UserUC) FindById(c context.Context, parameter imodles.UserParameters) (res iviewmodels.UserVM, err error) {
+	repository := irepository.NewUserRepository(uc.DB)
+	res, err = repository.FindByID(c, parameter)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (uc UserUC) Add(c context.Context, data *irequests.UserRequest) (res string, err error) {
+
+	objUser := imodles.User{
+		Name:      data.Name,
+		Email:     data.Email,
+		Address:   data.Address,
+		Phone:     data.Phone,
+		CreatedAt: data.CreatedAt,
+		CreatedBy: data.CreatedBy,
+	}
+	repository := irepository.NewUserRepository(uc.DB)
+	res, err = repository.Add(c, &objUser)
+	if err != nil {
+		return
+	}
 	return
 }

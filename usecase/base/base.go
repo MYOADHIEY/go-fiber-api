@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"kbaa-fiber-api/pkg/str"
 	basevm "kbaa-fiber-api/usecase/base/viewmodels"
+
+	"github.com/go-playground/validator/v10"
 )
 
 var (
@@ -32,6 +34,7 @@ type BaseUc struct {
 	EnvConfig map[string]string
 	DB        *sql.DB
 	TX        *sql.Tx
+	Validate  *validator.Validate
 }
 
 func (uc BaseUc) SetPaginationParameter(page, limit int, orderBy, sort string, orderByWhiteLists, orderByStringWhiteLists []string) (int, int, int, string, string) {

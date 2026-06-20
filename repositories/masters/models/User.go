@@ -1,8 +1,17 @@
 package models
 
 type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID        string `json:"id"`
+	Email     string `json:"_email"`
+	Name      string `json:"_name"`
+	Address   string `json:"address"`
+	Phone     string `json:"_phone"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
+	DeletedAt string `json:"deleted_at"`
+	CreatedBy int    `json:"created_by"`
+	UpdatedBy int    `json:"updated_by"`
+	DeletedBy int    `json:"deleted_by"`
 }
 
 type UserParameters struct {
@@ -23,7 +32,8 @@ var (
 		"def.id",
 	}
 
-	UserSelectStatement = ` select def.id,def._name,def._email, def._phone, def.address 
+	UserSelectStatement = ` select def.id,def._name,def._email, def._phone, def.address
+	, def.created_at, def.updated_at, def.deleted_at, def.created_by, def.updated_by, def.deleted_by
 	from _user def `
 
 	UserWhereSelectStatement = ` where def.deleted_at is null `

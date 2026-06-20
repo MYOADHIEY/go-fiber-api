@@ -2,12 +2,12 @@ package master
 
 import (
 	"context"
-	"fmt"
 	"kbaa-fiber-api/pkg/str"
 	ihandler "kbaa-fiber-api/server/handlers/base"
 
 	imodels "kbaa-fiber-api/repositories/masters/models"
 
+	irequests "kbaa-fiber-api/server/requests/master"
 	iusecase "kbaa-fiber-api/usecase/master"
 
 	"github.com/gofiber/fiber/v2"
@@ -26,11 +26,46 @@ func (h *UserHanlder) Find(ctx *fiber.Ctx) error {
 		Limit:        str.StringToInt(ctx.Query("limit")),
 	}
 
-	fmt.Println("code", parameters.ResponseCode, ctx.Query("response_code"), parameters.Page, parameters.Limit)
 	uc := iusecase.UserUC{BaseUc: h.BaseUC}
 	res, meta, err := uc.FindAll(c, parameters)
 	if err != nil {
-		fmt.Println("error ", err)
+		return h.SendResponse(ctx, nil, nil, err, 400)
 	}
-	return h.SendResponse(ctx, res, meta, err, parameters.ResponseCode)
+	return h.SendResponse(ctx, res, meta, err, 200)
+}
+
+func (h *UserHanlder) FindByID(ctx *fiber.Ctx) error {
+
+	c := ctx.Locals("ctx").(context.Context)
+	id := ctx.Params("id")
+	uc := iusecase.UserUC{BaseUc: h.BaseUC}
+
+	res, err := uc.FindById(c, imodels.UserParameters{ID: id})
+	if err != nil {
+		return h.SendResponse(ctx, nil, nil, err, 400)
+	}
+	return h.SendResponse(ctx, res, nil, err, 200)
+}
+
+func (h *UserHanlder) Add(ctx *fiber.Ctx) error {
+	c := ctx.Locals("ctx").(context.Context)
+
+	inputData := new(irequests.UserRequest)
+
+	if err := ctx.BodyParser(inputData); err != nil {
+
+		return h.SendResponse(ctx, nil, nil, err, 400)
+	}
+
+	if err := h.Validator.Struct(inputData); err != nil {
+
+		return h.SendResponse(ctx, nil, nil, err, 400)
+	}
+
+	uc := iusecase.UserUC{BaseUc: h.BaseUC}
+	res, err := uc.Add(c, inputData)
+	if err != nil {
+		return h.SendResponse(ctx, nil, nil, err, 400)
+	}
+	return h.SendResponse(ctx, nil, res, nil, 200)
 }
