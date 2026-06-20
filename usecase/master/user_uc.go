@@ -52,7 +52,7 @@ func (uc UserUC) FindById(c context.Context, parameter imodles.UserParameters) (
 	return
 }
 
-func (uc UserUC) Add(c context.Context, data *irequests.UserRequest) (res string, err error) {
+func (uc UserUC) Add(c context.Context, data *irequests.UserRequest) (res iviewmodels.UserVM, err error) {
 
 	objUser := imodles.User{
 		Name:      data.Name,
@@ -63,7 +63,29 @@ func (uc UserUC) Add(c context.Context, data *irequests.UserRequest) (res string
 		CreatedBy: data.CreatedBy,
 	}
 	repository := irepository.NewUserRepository(uc.DB)
-	res, err = repository.Add(c, &objUser)
+	res.ID, err = repository.Add(c, &objUser)
+	if err != nil {
+		return
+	}
+	return
+}
+
+func (uc UserUC) Update(c context.Context, data *irequests.UserRequest) (res iviewmodels.UserVM, err error) {
+	objUser := imodles.User{
+		ID:        data.ID,
+		Name:      data.Name,
+		Email:     data.Email,
+		Address:   data.Address,
+		Phone:     data.Phone,
+		UpdatedAt: data.UpdatedAt,
+		UpdatedBy: data.UpdatedBy,
+	}
+	repository := irepository.NewUserRepository(uc.DB)
+	res.ID, err = repository.Update(c, &objUser)
+	if err != nil {
+		return
+	}
+	res, err = repository.FindByID(c, imodles.UserParameters{ID: res.ID})
 	if err != nil {
 		return
 	}

@@ -13,6 +13,7 @@ type IUserRepository interface {
 	FindAll(c context.Context, params imodels.UserParameters) ([]iviewmodels.UserVM, int, error)
 	FindByID(c context.Context, params imodels.UserParameters) (iviewmodels.UserVM, error)
 	Add(c context.Context, data *imodels.User) (string, error)
+	Update(c context.Context, data *imodels.User) (string, error)
 }
 
 type UserRepository struct {
@@ -111,5 +112,19 @@ func (repository UserRepository) Add(c context.Context, data *imodels.User) (res
 	if err != nil {
 		return
 	}
+	return
+}
+
+func (repository UserRepository) Update(c context.Context, data *imodels.User) (res string, err error) {
+	statement := ` update _user set
+	_name = $1, _email = $2, _phone =$3 ,address = $4,
+	updated_at = $5, updated_by = $6
+	where id = $7 returning id 
+	`
+	err = repository.DB.QueryRowContext(c, statement,
+		data.Name, data.Email, data.Phone, data.Address,
+		data.UpdatedAt, data.UpdatedBy,
+		data.ID,
+	).Scan(&res)
 	return
 }
