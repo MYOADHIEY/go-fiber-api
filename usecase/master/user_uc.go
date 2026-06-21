@@ -91,3 +91,18 @@ func (uc UserUC) Update(c context.Context, data *irequests.UserRequest) (res ivi
 	}
 	return
 }
+
+func (uc UserUC) Delete(c context.Context, data *irequests.UserRequest) (res iviewmodels.UserVM, err error) {
+	objUser := imodles.User{
+		ID:        data.ID,
+		DeletedAt: data.DeletedAt,
+		DeletedBy: data.DeletedBy,
+	}
+	repository := irepository.NewUserRepository(uc.DB)
+	res.ID, err = repository.Delete(c, &objUser)
+	if err != nil {
+		return
+	}
+
+	return
+}

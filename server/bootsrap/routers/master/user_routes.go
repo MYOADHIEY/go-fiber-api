@@ -27,4 +27,5 @@ func (route UserRoute) RegisterRouters() {
 	r.Get("/:id", handler.FindByID)
 	r.Post("/", handler.Add)
 	r.Put("/:id", handler.Update)
+	r.Delete("/:id", handler.Delete)
 }

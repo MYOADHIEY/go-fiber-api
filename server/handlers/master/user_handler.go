@@ -96,3 +96,30 @@ func (h *UserHanlder) Update(ctx *fiber.Ctx) error {
 	}
 	return h.SendResponse(ctx, nil, res, nil, 200)
 }
+
+func (h *UserHanlder) Delete(ctx *fiber.Ctx) error {
+	c := ctx.Locals("ctx").(context.Context)
+
+	id := ctx.Params("id")
+	if id == "" {
+		return h.SendResponse(ctx, nil, nil, "err", 400)
+	}
+	inputData := new(irequests.UserRequest)
+
+	if err := ctx.BodyParser(inputData); err != nil {
+
+		return h.SendResponse(ctx, nil, nil, err, 400)
+	}
+
+	if err := h.Validator.Struct(inputData); err != nil {
+
+		return h.SendResponse(ctx, nil, nil, err, 400)
+	}
+	inputData.ID = id
+	uc := iusecase.UserUC{BaseUc: h.BaseUC}
+	res, err := uc.Delete(c, inputData)
+	if err != nil {
+		return h.SendResponse(ctx, nil, nil, err, 400)
+	}
+	return h.SendResponse(ctx, nil, res, nil, 200)
+}

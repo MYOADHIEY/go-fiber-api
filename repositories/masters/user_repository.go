@@ -14,6 +14,7 @@ type IUserRepository interface {
 	FindByID(c context.Context, params imodels.UserParameters) (iviewmodels.UserVM, error)
 	Add(c context.Context, data *imodels.User) (string, error)
 	Update(c context.Context, data *imodels.User) (string, error)
+	Delete(c context.Context, data *imodels.User) (string, error)
 }
 
 type UserRepository struct {
@@ -124,6 +125,18 @@ func (repository UserRepository) Update(c context.Context, data *imodels.User) (
 	err = repository.DB.QueryRowContext(c, statement,
 		data.Name, data.Email, data.Phone, data.Address,
 		data.UpdatedAt, data.UpdatedBy,
+		data.ID,
+	).Scan(&res)
+	return
+}
+
+func (repository UserRepository) Delete(c context.Context, data *imodels.User) (res string, err error) {
+	statement := ` update _user set
+	deleted_at = $1, deleted_by = $2
+	where id = $3 returning id 
+	`
+	err = repository.DB.QueryRowContext(c, statement,
+		data.DeletedAt, data.DeletedBy,
 		data.ID,
 	).Scan(&res)
 	return
