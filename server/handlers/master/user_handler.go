@@ -2,6 +2,7 @@ package master
 
 import (
 	"context"
+	"fmt"
 	"kbaa-fiber-api/pkg/str"
 	ihandler "kbaa-fiber-api/server/handlers/base"
 
@@ -19,6 +20,8 @@ type UserHanlder struct {
 
 func (h *UserHanlder) Find(ctx *fiber.Ctx) error {
 	c := ctx.Locals("ctx").(context.Context)
+	user_id := ctx.Locals("user_id")
+	fmt.Println("user_id nya", c, user_id)
 	parameters := imodels.UserParameters{
 		ResponseCode: str.StringToInt(ctx.Query("response_code")),
 		Search:       ctx.Query("search"),

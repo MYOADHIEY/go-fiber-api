@@ -3,10 +3,13 @@ package base
 import (
 	"database/sql"
 	"fmt"
+	"kbaa-fiber-api/pkg/jwe"
+	"kbaa-fiber-api/pkg/jwt"
 	"kbaa-fiber-api/pkg/str"
 	basevm "kbaa-fiber-api/usecase/base/viewmodels"
 
 	"github.com/go-playground/validator/v10"
+	jwtFiber "github.com/gofiber/jwt/v2"
 )
 
 var (
@@ -35,6 +38,9 @@ type BaseUc struct {
 	DB        *sql.DB
 	TX        *sql.Tx
 	Validate  *validator.Validate
+	JweCred   jwe.Credential
+	JwtCred   jwt.Credential
+	JwtConfig jwtFiber.Config
 }
 
 func (uc BaseUc) SetPaginationParameter(page, limit int, orderBy, sort string, orderByWhiteLists, orderByStringWhiteLists []string) (int, int, int, string, string) {

@@ -5,11 +5,14 @@ go 1.25.0
 require github.com/go-playground/universal-translator v0.18.1
 
 require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gofiber/utils v0.0.10 // indirect
 	github.com/golang-jwt/jwt/v4 v4.0.0 // indirect
 	github.com/gorilla/schema v1.1.0 // indirect
 	github.com/labstack/gommon v0.5.0 // indirect
+	github.com/lestrrat/go-pdebug v0.0.0-20180220043741-569c97477ae8 // indirect
 	github.com/philhofer/fwd v1.1.3-0.20240916144458-20a13a1f6b7c // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/tinylib/msgp v1.2.5 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	golang.org/x/net v0.51.0 // indirect
@@ -17,6 +20,7 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gabriel-vasile/mimetype v1.4.13 // indirect
 	github.com/go-chi/chi v1.5.5
 	github.com/go-playground/locales v0.14.1 // indirect
@@ -29,6 +33,7 @@ require (
 	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/leodido/go-urn v1.4.0 // indirect
+	github.com/lestrrat/go-jwx v0.9.1
 	github.com/lib/pq v1.12.3 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.21 // indirect

@@ -5,6 +5,8 @@ import (
 	"log"
 	"time"
 
+	"kbaa-fiber-api/pkg/jwe"
+	"kbaa-fiber-api/pkg/jwt"
 	postgresqlPkg "kbaa-fiber-api/pkg/postgresql"
 	"kbaa-fiber-api/pkg/str"
 
@@ -14,6 +16,8 @@ import (
 type Configurations struct {
 	EnvConfig map[string]string
 	DB        *sql.DB
+	JweCred   jwe.Credential
+	JwtCred   jwt.Credential
 }
 
 var (
@@ -41,5 +45,20 @@ func LoadConfigurations() (res Configurations, err error) {
 	res.DB.SetMaxOpenConns(dbConn.DBMaxConnection)
 	res.DB.SetMaxIdleConns(dbConn.DBMAxIdleConnection)
 	res.DB.SetConnMaxLifetime(time.Duration(dbConn.DBMaxLifeTimeConnection) * time.Second)
+
+	// jwe
+	res.JweCred = jwe.Credential{
+		KeyLocation: res.EnvConfig["APP_PRIVATE_KEY_LOCATION"],
+		Passphrase:  res.EnvConfig["APP_PRIVATE_KEY_PASSPHRASE"],
+	}
+
+	// jwt
+	res.JwtCred = jwt.Credential{
+		Secret:           res.EnvConfig["TOKEN_SECRET"],
+		ExpSecret:        str.StringToInt(res.EnvConfig["TOKEN_EXP_SECRET"]),
+		RefreshSecret:    res.EnvConfig["TOKEN_REFRESH_SECRET"],
+		RefreshExpSecret: str.StringToInt(res.EnvConfig["TOKEN_EXP_REFRESH_SECRET"]),
+	}
+
 	return
 }

@@ -75,6 +75,8 @@ func main() {
 		EnvConfig: configurations.EnvConfig,
 		DB:        configurations.DB,
 		Validate:  validatorDriver,
+		JweCred:   configurations.JweCred,
+		JwtCred:   configurations.JwtCred,
 	}
 
 	appBoot := bootsrap.AppBoot{
