@@ -51,16 +51,12 @@ func (h BaseHandler) errors(err interface{}) []string {
 
 	switch e := err.(type) {
 	case string:
-		fmt.Println("type string")
 		errMsgs = []string{e}
 	case []string:
-		fmt.Println("type string []")
 		errMsgs = e
 	case nil:
-		fmt.Println("type nil")
 		errMsgs = nil
 	default:
-		fmt.Println("type defalut")
 		errMsgs = []string{fmt.Sprintf("%v", e)}
 	}
 	return errMsgs

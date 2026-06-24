@@ -9,7 +9,7 @@ import (
 )
 
 type IAccountRepostiry interface {
-	Add(c context.Context, data imodels.Registration) (res string, err error)
+	Add(c context.Context, data imodels.Registration) (res string, responseCode int, err error)
 }
 
 type RegistrationRepository struct {
@@ -41,7 +41,7 @@ func (repository RegistrationRepository) scanRow(row *sql.Row) (res iviewmodels.
 	return
 }
 
-func (repository RegistrationRepository) Add(c context.Context, data imodels.Registration) (res string, err error) {
+func (repository RegistrationRepository) Add(c context.Context, data imodels.Registration) (res string, responseCode int, err error) {
 	statement := `insert into _user
 	( _email, _password)
 	values ($1, $2) returning id
@@ -51,6 +51,7 @@ func (repository RegistrationRepository) Add(c context.Context, data imodels.Reg
 		data.Password,
 	).Scan(&res)
 	if err != nil {
+		err, responseCode = database.DBErrorMap(err, nil, nil)
 		return
 	}
 	return

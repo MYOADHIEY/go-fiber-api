@@ -20,17 +20,17 @@ func (uc UserUC) BuildBody(res *iviewmodels.UserVM) {
 
 }
 
-func (uc UserUC) FindAll(c context.Context, parameter imodles.UserParameters) (res []iviewmodels.UserVM, p baseviewmodels.BasePaginationVM, err error) {
+func (uc UserUC) FindAll(c context.Context, parameter imodles.UserParameters) (res []iviewmodels.UserVM, p baseviewmodels.BasePaginationVM, responseCode int, err error) {
 	parameter.Offset, parameter.Limit, parameter.Page, parameter.By, parameter.Sort = uc.SetPaginationParameter(parameter.Page, parameter.Limit, parameter.By, parameter.Sort, imodles.UserOrderBy, imodles.UserByString)
 	var count int
 
 	repository := irepository.NewUserRepository(uc.DB)
-	res, count, err = repository.FindAll(c, parameter)
+	res, count, responseCode, err = repository.FindAll(c, parameter)
 
 	if err != nil {
 
 		logruslogger.Log(logruslogger.WarnLevel, err.Error(), functioncaller.PrintFuncName(), "query", c.Value("requestid"))
-		return res, p, err
+		return res, p, responseCode, err
 	}
 
 	p = uc.SetPaginationResponse(parameter.Page, parameter.Limit, count)
@@ -42,9 +42,10 @@ func (uc UserUC) FindAll(c context.Context, parameter imodles.UserParameters) (r
 	return
 }
 
-func (uc UserUC) FindById(c context.Context, parameter imodles.UserParameters) (res iviewmodels.UserVM, err error) {
+func (uc UserUC) FindById(c context.Context, parameter imodles.UserParameters) (res iviewmodels.UserVM, responseCode int, err error) {
+	responseCode = 200
 	repository := irepository.NewUserRepository(uc.DB)
-	res, err = repository.FindByID(c, parameter)
+	res, responseCode, err = repository.FindByID(c, parameter)
 	if err != nil {
 		return
 	}
@@ -52,7 +53,7 @@ func (uc UserUC) FindById(c context.Context, parameter imodles.UserParameters) (
 	return
 }
 
-func (uc UserUC) Add(c context.Context, data *irequests.UserRequest) (res iviewmodels.UserVM, err error) {
+func (uc UserUC) Add(c context.Context, data *irequests.UserRequest) (res iviewmodels.UserVM, responseCode int, err error) {
 
 	objUser := imodles.User{
 		Name:      data.Name,
@@ -63,14 +64,14 @@ func (uc UserUC) Add(c context.Context, data *irequests.UserRequest) (res iviewm
 		CreatedBy: data.CreatedBy,
 	}
 	repository := irepository.NewUserRepository(uc.DB)
-	res.ID, err = repository.Add(c, &objUser)
+	res.ID, responseCode, err = repository.Add(c, &objUser)
 	if err != nil {
 		return
 	}
 	return
 }
 
-func (uc UserUC) Update(c context.Context, data *irequests.UserRequest) (res iviewmodels.UserVM, err error) {
+func (uc UserUC) Update(c context.Context, data *irequests.UserRequest) (res iviewmodels.UserVM, responseCode int, err error) {
 	objUser := imodles.User{
 		ID:        data.ID,
 		Name:      data.Name,
@@ -81,25 +82,25 @@ func (uc UserUC) Update(c context.Context, data *irequests.UserRequest) (res ivi
 		UpdatedBy: data.UpdatedBy,
 	}
 	repository := irepository.NewUserRepository(uc.DB)
-	res.ID, err = repository.Update(c, &objUser)
+	res.ID, responseCode, err = repository.Update(c, &objUser)
 	if err != nil {
 		return
 	}
-	res, err = repository.FindByID(c, imodles.UserParameters{ID: res.ID})
+	res, _, err = repository.FindByID(c, imodles.UserParameters{ID: res.ID})
 	if err != nil {
 		return
 	}
 	return
 }
 
-func (uc UserUC) Delete(c context.Context, data *irequests.UserRequest) (res iviewmodels.UserVM, err error) {
+func (uc UserUC) Delete(c context.Context, data *irequests.UserRequest) (res iviewmodels.UserVM, responseCode int, err error) {
 	objUser := imodles.User{
 		ID:        data.ID,
 		DeletedAt: data.DeletedAt,
 		DeletedBy: data.DeletedBy,
 	}
 	repository := irepository.NewUserRepository(uc.DB)
-	res.ID, err = repository.Delete(c, &objUser)
+	res.ID, responseCode, err = repository.Delete(c, &objUser)
 	if err != nil {
 		return
 	}

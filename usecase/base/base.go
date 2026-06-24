@@ -2,7 +2,6 @@ package base
 
 import (
 	"database/sql"
-	"fmt"
 	"kbaa-fiber-api/pkg/jwe"
 	"kbaa-fiber-api/pkg/jwt"
 	"kbaa-fiber-api/pkg/str"
@@ -99,5 +98,5 @@ func (uc BaseUc) SetPaginationResponse(page, limit, total int) (paginationRespon
 }
 
 func (uc BaseUc) TestUC(test string) {
-	fmt.Println(test)
+
 }

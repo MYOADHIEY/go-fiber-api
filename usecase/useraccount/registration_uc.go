@@ -13,13 +13,14 @@ type RegistrationUc struct {
 	*baseUc.BaseUc
 }
 
-func (uc RegistrationUc) Register(c context.Context, data *irequest.RegistrationRequest) (res iviewmodels.RegistrationtVM, err error) {
+func (uc RegistrationUc) Register(c context.Context, data *irequest.RegistrationRequest) (res iviewmodels.RegistrationtVM, responseCode int, err error) {
+	responseCode = 200
 	repo := irepository.NewRegistrationRepository(uc.DB)
 	inputModel := imodels.Registration{
 		Email:    data.Email,
 		Password: data.Password,
 	}
-	res.ID, err = repo.Add(c, inputModel)
+	res.ID, responseCode, err = repo.Add(c, inputModel)
 	if err != nil {
 		return
 	}

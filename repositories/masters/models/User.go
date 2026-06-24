@@ -23,6 +23,7 @@ type UserParameters struct {
 	Limit        int    `json:"limit"`
 	Sort         string `json:"sort"`
 	ResponseCode int    `json:"response_code"`
+	Type         string `json:"_type"`
 }
 
 var (

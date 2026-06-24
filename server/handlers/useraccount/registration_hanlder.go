@@ -2,10 +2,10 @@ package useraccount
 
 import (
 	"context"
-	"fmt"
 	ihandler "kbaa-fiber-api/server/handlers/base"
 	irequest "kbaa-fiber-api/server/requests/useraccount"
 	iusecase "kbaa-fiber-api/usecase/useraccount"
+	"net/http"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -19,18 +19,17 @@ func (h *RegistrationHandler) Register(ctx *fiber.Ctx) error {
 	data := new(irequest.RegistrationRequest)
 	if err := ctx.BodyParser(data); err != nil {
 
-		return h.SendResponse(ctx, nil, nil, err, 400)
+		return h.SendResponse(ctx, nil, nil, err, http.StatusBadRequest)
 	}
 
 	if err := h.Validator.Struct(data); err != nil {
 
-		return h.SendResponse(ctx, nil, nil, err, 400)
+		return h.SendResponse(ctx, nil, nil, err, http.StatusBadRequest)
 	}
 	accounUC := iusecase.RegistrationUc{BaseUc: h.BaseUC}
-	res, err := accounUC.Register(c, data)
+	res, responseCode, err := accounUC.Register(c, data)
 	if err != nil {
-		fmt.Println("err", err.Error())
-		return h.SendResponse(ctx, nil, nil, err.Error(), 400)
+		return h.SendResponse(ctx, nil, nil, err.Error(), responseCode)
 	}
-	return h.SendResponse(ctx, res, nil, nil, 200)
+	return h.SendResponse(ctx, res, nil, err, responseCode)
 }
